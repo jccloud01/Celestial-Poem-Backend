@@ -30,7 +30,9 @@ router.get('/', (req, res) => {
 				status: 200,
 				user: user,
 			})
-		);
+		).catch((err => {
+			console.log(err)
+		}));
 });
 
 router.delete('/:id', (req, res) => {

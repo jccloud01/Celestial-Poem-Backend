@@ -7,7 +7,7 @@ let mongoURI = '';
 if (process.env.NODE_ENV === 'production') {
 	mongoURI = process.env.DB_URL;
 } else {
-	mongoURI = 'mongodb://localhost/book-e';
+	mongoURI = 'mongodb://127.0.0.1/celestial-app';
 }
 mongoose
 	.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
