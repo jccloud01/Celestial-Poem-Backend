@@ -2,10 +2,13 @@ const mongoose = require('mongoose');
 
 mongoose.Promise = Promise;
 
-let mongoURI =
-	'mongodb+srv://julesverne:Monopoly12@celestialpoems.mky3r.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+let mongoURI = '';
 
-
+if (process.env.NODE_ENV === 'production') {
+	mongoURI = process.env.DB_URL;
+} else {
+	mongoURI = 'mongodb://localhost/book-e';
+}
 mongoose
 	.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 	.then((instance) => {
