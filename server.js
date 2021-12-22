@@ -2,10 +2,12 @@ require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-app.use(cors());
+
 
 const app = express();
 const PORT = process.env.PORT || 8080;
+
+app.use(cors());
 
 const UserController = require('./controllers/userController');
 const PoemController = require('./controllers/poemController');
