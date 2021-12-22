@@ -1,47 +1,33 @@
 const Poem = require('../models/poem');
-const User = require('../models/user');
+// const User = require('../models/user');
 
-async function addUser(username, email, password) {
-	let newUser = await User.create({
-		username: username,
-        email: email,
-		password: password,
-	});
-	console.log('successfully created ', newUser.userame);
-	return newUser;
-}
+// async function addUser(username, email, password) {
+// 	let newUser = await User.create({
+// 		username: username,
+//         email: email,
+// 		password: password,
+// 	});
+// 	console.log('successfully created ', newUser.userame);
+// 	return newUser;
+// }
 
-async function addPoem(title, poem, adjectives, userId) {
+async function addPoem(title, poem, adjectives, poemId) {
 	let newPoem = await Poem.create({
 		title: title,
 		poem: poem,
 		adjectives: adjectives,
-		users: userId,
+		poemId: poemId,
 	});
 	console.log('successfully created ', newPoem.title);
 	return newPoem;
 }
-async function addUsers() {
-	User.deleteMany({}).then(() => {
+async function addPoems() {
+	Poem.deleteMany({}).then(() => {
 		Poem.deleteMany({}).then(() => {
-			addUser('Jules', 'jc.cloud@gmail.com', 'myCatWrites12').then(async (user) => {
-				const e1 = await Promise.resolve(
-					addPoem('one', 'poem of course', 'calm', user._id)
-				);
-				const e2 = await Promise.resolve(
-					addPoem('two', 'random', 'calm', user._id)
-				);
-				const e3 = await Promise.resolve(
-					addPoem('three', 'test1blue3', 'calming', user._id)
-				);
-				const e4 = await Promise.resolve(
-					addPoem('four', 'one two tree bored', 'calming', user._id)
-				);
-				user.poems.push(e1, e2, e3, e4);
-				user.save();
-			});
-		});
+			addPoem('Blue', 'testing1blue3', 'creative', poem._id)
+		
 	});
-}
+})}
 
-addUsers();
+
+addPoems();

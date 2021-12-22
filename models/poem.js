@@ -14,10 +14,7 @@ const poemSchema = mongoose.Schema(
 			type: String,
 			required: false,
 		},
-		users: {
-			ref: 'User',
-			type: mongoose.Schema.Types.ObjectId,
-		},
+		
 	},
 	{ timestamps: true }
 );

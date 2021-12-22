@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 const Poem = require('../models/poem');
-const User = require('../models/user');
+// const User = require('../models/user');
 
-router.post('/:userId', (req, res) => {
+router.post('/:poemId', (req, res) => {
 	console.log('body', req.body);
 
 	Poem.create(req.body).then((newPoem) => {
@@ -35,9 +35,9 @@ router.delete('/:id', (req, res) => {
 	Poem.findByIdAndDelete(req.params.id).then(() => res.status(204));
 });
 
-router.delete('/:poemId/:ownerId', (req, res) => {
+router.delete('/:poemId', (req, res) => {
 	Poem.findByIdAndDelete(req.params.poemId).then((poem) => {
-		User.findById(req.params.ownerId)
+		User.findById(req.params.poemId)
 			.populate('poems')
 			.then((user) => {
 				user.poems.pull({ _id: req.params.poemId });
