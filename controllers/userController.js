@@ -1,78 +1,58 @@
+app.get('/getUsername', verifyJWT, (req, res) => {
+	res.json({ isLogged: true, username: req.user.username });
+});
 
+app.post('/login', (req, res) => {
+	const userLogged = req.body;
 
+	User.findOne({ username: userLogged.username }).then((dbUser) => {
+		if (!dbUser) {
+			return res.json({
+				message: 'Invalid Username or Password',
+			});
+		}
+		bcrypt.compare(userLogged.password, dbUser.password).then((isCorrect) => {
+			if (isCorrect) {
+				const info = {
+					id: dbUser._id,
+					username: dbUser.username,
+				};
+				jwt.sign(
+					info,
+					process.env.JWT_SECRET,
+					{ expiresIn: 90000 },
+					(err, token) => {
+						if (err) return res.json({ message: err });
+						return res.json({
+							message: 'Success',
+							token: 'Coin ' + token,
+						});
+					}
+				);
+			} else {
+				return res.json({
+					message: 'Invalid Username or Password',
+				});
+			}
+		});
+	});
+});
 
-//POST-MVP DUE TO BUGS
-
-
-// const express = require('express');
-// const { model } = require('mongoose');
-// const Poem = require('../models/poem');
-// const router = express.Router();
-// const User = require('../models/user');
-
-// router.post('/', (req, res) => {
-// 	console.log(req.body);
-// 	User.find({ userName: req.body.userName }).then((users) => {
-// 		if (users.length !== 0) {
-// 			res.status(400).json({
-// 				message: `username is taken`,
-// 			});
-// 		} else {
-// 			User.create(req.body).then((user) =>
-// 				res.json({
-// 					status: 201,
-// 					user: user,
-// 				})
-// 			);
-// 		}
-// 	});
-// });
-
-// router.get('/', (req, res) => {
-// 	User.find()
-// 		.populate('poems')
-// 		.then((user) =>
-// 			res.json({
-// 				status: 200,
-// 				user: user,
-// 			})
-// 		).catch((err => {
-// 			console.log(err)
-// 		}));
-// });
-
-// router.delete('/:id', (req, res) => {
-// 	User.findByIdAndDelete(req.params.id).then(() => res.status(204));
-// });
-
-// router.get('/:id', (req, res) => {
-// 	User.findById(req.params.id)
-// 		.populate('poems')
-// 		.then((user) =>
-// 			res.json({
-// 				status: 200,
-// 				user: user,
-// 			})
-// 		);
-// });
-
-// router.put('/:poemId/:userId', (req, res) => {
-// 	Poem.findByIdAndUpdate(req.params.poemId, req.body, { new: true }).then(
-// 		(poem) => {
-// 			console.log('poem', poem);
-// 			User.findByIdAndUpdate(req.params.userId, req.body, { new: true })
-// 				.populate('poems')
-// 				.then((user) => {
-// 					console.log('user', user);
-// 					poem.save();
-// 					res.json({
-// 						status: 200,
-// 						user: user,
-// 					});
-// 				});
-// 		}
-// 	);
-// });
-
-
-// module.exports = router;
+function verifyJWT(req, res, next) {
+	const token = req.headers['x-access-token']?.split(' ')[1];
+	if (token) {
+		jwt.verify(token.process.env.PASSWORD, (err, decoded) => {
+			if (err)
+				return res.json({
+					isLogged: false,
+					message: 'Failed to Authenticate',
+				});
+			req.user = {};
+			req.user.id = decoded.id;
+			req.user.username = decoded.username;
+			next();
+		});
+	} else {
+		res.json({ message: 'Incorrect Token Given' });
+	}
+}
