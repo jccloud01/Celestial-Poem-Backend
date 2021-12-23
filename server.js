@@ -13,17 +13,17 @@ app.use(morgan('combined'))
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 
-// const UserController = require('./controllers/userController')
+const UserController = require('./controllers/userController')
 const PoemController = require('./controllers/poemController')
 
-// const User = require('./models/user')
+const User = require('./models/user')
 const Poem = require('./models/poem')
 
 app.get('/', function (req, res) {
 	res.send('hello');
 });
 
-// app.use('/user', UserController)
+app.use('/user', UserController)
 app.use('/poem', PoemController)
 
 
